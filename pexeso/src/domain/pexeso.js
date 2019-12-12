@@ -13,14 +13,14 @@ export class Pexeso {
 
         let maxId = this.columns/2;
         let idArray = [];
-        for (let i = 0; i < maxId; i++) {
+        for (let i = 0; i < (maxId*4); i++) {
             idArray.push(i);
             idArray.push(i);
         }
 
         this.array = [];
         let tempArray = [];
-        for (let i = 0; i < columns; i++) {
+        for (let i = 0; i < (columns*4); i++) {
             let tempNum = Math.floor(Math.random() * idArray.length);
             tempArray.push(new field (0, idArray[tempNum]));
             idArray.splice(tempNum, 1);
@@ -30,6 +30,9 @@ export class Pexeso {
         console.log(this.array);
     }
 
+    /**
+     * Checks if pair 1 = pair 2
+     */
     isPairEqual() {
         return this.pairs.pairPiece1 === this.pairs.pairPiece2;
     }
@@ -39,11 +42,12 @@ export class Pexeso {
      * @param {number} x
      */
     reveal(x) {
-        if (this.pairs.pairPiece1 === null && this.pairs.pairPiece2 === null) {
+        if (this.pairs.pairPiece1 === null & this.pairs.pairPiece2 === null) {
             this.pairs.pairPiece1 = this.array[x].id;
-            this.pairs.pairPiece1.state = 1;
+            this.array[x].state = 1;
         } else if (this.pairs.pairPiece2 === null) {
             this.pairs.pairPiece2 = this.array[x].id;
+            this.array[x].state = 1;
         }
         
         if (this.pairs.isPairEqual() = true) {
@@ -55,6 +59,7 @@ export class Pexeso {
         }
         else {
             this.clearPair();
+            this.pairs.pairPiece1 = 0;
         }
         this.pairs.pairPiece1 = null;
         this.pairs.pairPiece2 = null;            
@@ -64,7 +69,7 @@ export class Pexeso {
      * Clears out both pieces of the pair
      * @param {number} x
      */
-    clearPair() {
+    clearPair(x) {
         for (let i = 0; i < columns; i++) {
             if (this.array[x].id === this.pairs.pairPiece1 || this.array[x].id === this.pairs.pairPiece2) {
                 this.array[x].state = 0;
@@ -76,12 +81,15 @@ export class Pexeso {
      * Returns the current state of the field.
      * Fields can be: hidden or visible.
      * @param {number} x
-     * @return {field}
      */
     getField(x) {
         return this.array[x];
     }
 
+    /**
+     * Checks if all tiles are shown
+     * @param {number} x 
+     */
     didWin(x) {
         for (let i = 0; i < columns; i++) {
             if (this.array[x].state === 0)

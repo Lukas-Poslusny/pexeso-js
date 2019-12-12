@@ -22,40 +22,36 @@ export class PexesoGUI {
         const header = document.createElement('h2');
         const smallHeader = document.createElement('h3');
 
-        const table = document.createElement('table');
+        smallHeader.innerHTML = `Pairs left: ${this.game.pair}`;
+        header.innerHTML = `Game is (<span class="orange">In Progress</span>)`;   
 
-            for (let j = 0; j < this.game.columns; j++) {
-                const cell = document.createElement('td');
-                cell.innerHTML = this._getIcon(j);
-                cell.addEventListener('click', () => {
-                    this.game.reveal(j);
-                    this.draw();
-                });
-            }        
+        const div = document.createElement('div');
 
+        this.createGameField(div);
         this.container.appendChild(header);
         this.container.appendChild(smallHeader);
-        this.container.appendChild(table);
+        this.container.appendChild(div);
     }
 
-    createGameField(table) {
-        for (let i = 0; i < this.game.rows; i++) {
-            const row = document.createElement('tr');
-            for (let j = 0; j < this.game.columns; j++) {
-                const cell = document.createElement('td');
-                cell.innerHTML = this._getIcon(i, j);
+    createGameField(div) {
+        for (let y = 0; y < this.game.columns; y++) {
+            const column = document.createElement('td');
+
+            for (let i = 0; i < this.game.columns; i++) {
+                const cell = document.createElement('span');
+                cell.innerHTML = this._getIcon(i);
                 cell.addEventListener('click', () => {
-                    this.game.reveal(j, i);
+                    this.game.reveal(i);
                     this.draw();
                 });
                 cell.addEventListener('contextmenu', (e) => {
                     this.draw();
                     e.preventDefault()
                 });
-
-                row.appendChild(cell);
+                
+                div.appendChild(cell);                
             }
-            table.appendChild(row);
+            div.appendChild(column);
         }
     }
 
@@ -72,25 +68,22 @@ export class PexesoGUI {
     /**
      * Selects the correct icon/number and returns it
      * @param {number} x
-     * @param {number} y
      * @return {string}
      * @private
      */
     _getIcon(x, y) {
-        switch (this.game.getField(y, x)) {
+        switch (this.game.getField(x)) {
             case 0:
-                return '<div class="hidden">&nbsp;</div>';
+                return `<div class="hidden">&nbsp;</div>`;
             case 1:
                 return `
                         <div class="empty">
-                            ${this.game.getField(y, x).id}
+                            ${this.game.getField(x).id}
                         </div>`;
             case 2:
                 return `<div class="revealed">
-                            ${this.game.getField(y, x).id}
+                            ${this.game.getField(x).id}
                         </div>`;
         }
     }
 }
-
-
