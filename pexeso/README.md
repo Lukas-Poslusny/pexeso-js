@@ -1,3 +1,0 @@
-# pexeso-js
-
-Lukáš Poslušný
